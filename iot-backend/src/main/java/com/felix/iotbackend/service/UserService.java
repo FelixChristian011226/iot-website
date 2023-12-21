@@ -3,7 +3,8 @@ package com.felix.iotbackend.service;
 import com.felix.iotbackend.pojo.User;
 
 public interface UserService {
+    User findByUsername(String username);
 
-    public User findById(Integer id);
+    void register(String username, String password);
 
 }
