@@ -10,4 +10,6 @@ public interface UserService {
     void update(User u);
 
     void updateAvatar(String avatarUrl);
+
+    void updatePassword(String newPassword);
 }
