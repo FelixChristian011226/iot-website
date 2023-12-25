@@ -10,6 +10,10 @@ const registerData = ref({
     password:'',
     rePassword:''
 })
+const loginData = ref({
+    username:'',
+    password:''
+})
 //VALIDATE PASSWORD
 const checkRePassword = (rule,value,callback)=>{
     if (value==='') {
@@ -21,7 +25,7 @@ const checkRePassword = (rule,value,callback)=>{
     }
 }
 //FORM VALIDATION RULES
-const rules = {
+const registerRules = {
     username:[
         {required:true,message:'请输入用户名',trigger:'blur'},
         {min:5,max:16 ,message:'长度为5-16位非空字符',trigger:'blur'}
@@ -34,8 +38,17 @@ const rules = {
         {validator:checkRePassword,trigger:'blur'}
     ]    
 }
+const loginRules = {
+    username:[
+        {required:true,message:'请输入用户名',trigger:'blur'}
+    ],
+    password:[
+        {required:true,message:'请输入密码',trigger:'blur'}
+    ]
+}
 //CALL BACKEND API FOR REGISTER
-import {userRegisterService} from '@/api/user.js'
+import {userRegisterService,userLoginService} from '@/api/user.js'
+//REGISTER FUNCTION
 const register = async()=>{
     if(!registerData.value.username||!registerData.value.password||!registerData.value.rePassword){
         // alert('请填写完整信息')
@@ -91,6 +104,27 @@ const register = async()=>{
         });
     }
 }
+//LOGIN FUNCTION
+const login = async()=>{
+    if(!loginData.value.username||!loginData.value.password){
+        return
+    }
+    let result = await userLoginService(loginData.value);
+    if(result.code===0){
+        swal({
+            title: "登录成功",
+            icon: "success",
+        }).then(()=>{
+            //JUMP TO DASHBOARD
+        });        
+    }else{
+        swal({
+            title: "登录失败",
+            text: result.message,
+            icon: "error",
+        });
+    }
+}
 </script>
 
 <template>
@@ -98,7 +132,7 @@ const register = async()=>{
         <el-col :span="12" class="bg"></el-col>
         <el-col :span="6" :offset="3" class="form">
             <!-- REGISTER FORM -->
-            <el-form ref="form" size="large" autocomplete="off" v-if="isRegister" :model="registerData" :rules="rules">
+            <el-form ref="form" size="large" autocomplete="off" v-if="isRegister" :model="registerData" :rules="registerRules">
                 <el-form-item>
                     <h1>注册</h1>
                 </el-form-item>
@@ -124,15 +158,15 @@ const register = async()=>{
                 </el-form-item>
             </el-form>
             <!-- LOGIN FORM -->
-            <el-form ref="form" size="large" autocomplete="off" v-else>
+            <el-form ref="form" size="large" autocomplete="off" v-else :model="loginData" :rules="loginRules">
                 <el-form-item>
                     <h1>登录</h1>
                 </el-form-item>
-                <el-form-item>
-                    <el-input :prefix-icon="User" placeholder="请输入用户名"></el-input>
+                <el-form-item prop="username">
+                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="loginData.username"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-input name="password" :prefix-icon="Lock" type="password" placeholder="请输入密码"></el-input>
+                <el-form-item prop="password">
+                    <el-input name="password" :prefix-icon="Lock" type="password" placeholder="请输入密码" v-model="loginData.password"></el-input>
                 </el-form-item>
                 <el-form-item class="flex">
                     <div class="flex">
@@ -140,9 +174,9 @@ const register = async()=>{
                         <el-link type="primary" :underline="false">忘记密码？</el-link>
                     </div>
                 </el-form-item>
-                <!-- 登录按钮 -->
+                <!-- Login Button -->
                 <el-form-item>
-                    <el-button class="button" type="primary" auto-insert-space>登录</el-button>
+                    <el-button class="button" type="primary" auto-insert-space @click="login">登录</el-button>
                 </el-form-item>
                 <el-form-item class="flex">
                     <el-link type="info" :underline="false" @click="isRegister = true">

@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result<String> login(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$") String password){
+    public Result<String> login(String username, String password){
         //FIND USER
         User u = userService.findByUsername(username);
         //JUDGE EXISTENCE
