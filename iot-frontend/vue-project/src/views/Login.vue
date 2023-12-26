@@ -28,11 +28,11 @@ const checkRePassword = (rule,value,callback)=>{
 const registerRules = {
     username:[
         {required:true,message:'请输入用户名',trigger:'blur'},
-        {min:5,max:16 ,message:'长度为5-16位非空字符',trigger:'blur'}
+        {min:6,max:16 ,message:'长度为6-16位非空字符',trigger:'blur'}
     ],
     password:[
         {required:true,message:'请输入密码',trigger:'blur'},
-        {min:5,max:16 ,message:'长度为5-16位非空字符',trigger:'blur'}
+        {min:6,max:16 ,message:'长度为6-16位非空字符',trigger:'blur'}
     ],
     rePassword:[
         {validator:checkRePassword,trigger:'blur'}
@@ -68,20 +68,20 @@ const register = async()=>{
         });
         return
     }
-    if (registerData.value.username.length<5||registerData.value.username.length>16) {
-        // alert('用户名长度为5-16位')
+    if (registerData.value.username.length<6||registerData.value.username.length>16) {
+        // alert('用户名长度为6-16位')
         swal({
             title: "注册失败",
-            text: "用户名长度为5-16位",
+            text: "用户名长度为6-16位",
             icon: "error",
         });
         return
     }
-    if (registerData.value.password.length<5||registerData.value.password.length>16) {
-        // alert('密码长度为5-16位')
+    if (registerData.value.password.length<6||registerData.value.password.length>16) {
+        // alert('密码长度为6-16位')
         swal({
             title: "注册失败",
-            text: "密码长度为5-16位",
+            text: "密码长度为6-16位",
             icon: "error",
         });
         return
@@ -105,6 +105,8 @@ const register = async()=>{
     }
 }
 //LOGIN FUNCTION
+import {useRouter} from 'vue-router'
+const router = useRouter()
 const login = async()=>{
     if(!loginData.value.username||!loginData.value.password){
         return
@@ -116,6 +118,7 @@ const login = async()=>{
             icon: "success",
         }).then(()=>{
             //JUMP TO DASHBOARD
+            router.push('/home')
         });        
     }else{
         swal({
