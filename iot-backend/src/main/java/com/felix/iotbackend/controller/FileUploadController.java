@@ -18,8 +18,9 @@ public class FileUploadController {
         String originalFilename = file.getOriginalFilename();
         String filename = UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));
         String property = System.getProperty("user.dir");   //GET CURRENT WORKING DIRECTORY
-        String path = (new File(property)).getParent()+File.separator+"iot-database"+File.separator+"files";    //.\iot-website\iot-database\files
+//        String path = (new File(property)).getParent()+File.separator+"iot-database"+File.separator+"files";    //.\iot-website\iot-database\files
+        String path = (new File(property)).getParent()+File.separator+"iot-frontend"+File.separator+"vue-project"+File.separator+"public"+File.separator+"avatars";
         file.transferTo(new File(path+File.separator+filename));
-        return Result.success(path+File.separator+filename);
+        return Result.success(File.separator+"avatars"+File.separator+filename);
     }
 }

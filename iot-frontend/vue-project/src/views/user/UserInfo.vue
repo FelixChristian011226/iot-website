@@ -1,12 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import swal from 'sweetalert';
 import useUserInfoStore from '@/stores/userInfo.js'
-const userInfo = ref({
-    id: 0,
-    username: 'zhangsan',
-    nickname: 'zs',
-    email: 'zs@163.com',
-})
+const userInfoStore = useUserInfoStore();
+const userInfo = ref({...userInfoStore.info})
 const rules = {
     nickname: [
         { required: true, message: '请输入用户昵称', trigger: 'blur' },
@@ -20,6 +17,17 @@ const rules = {
         { required: true, message: '请输入用户邮箱', trigger: 'blur' },
         { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
     ]
+}
+import { userInfoUpdateService } from '@/api/user.js'
+const updateUserInfo = async()=>{
+    let result = await userInfoUpdateService(userInfo.value);
+    swal({
+            title: "修改成功",
+            icon: "success",
+        }).then(()=>{
+            userInfoStore.setInfo(userInfo.value);
+            window.location.reload();
+    });
 }
 </script>
 <template>
@@ -42,7 +50,7 @@ const rules = {
                         <el-input v-model="userInfo.email"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary">提交修改</el-button>
+                        <el-button type="primary" @click="updateUserInfo">提交修改</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>

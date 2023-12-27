@@ -9,9 +9,11 @@ import {
     SwitchButton,
     CaretBottom
 } from '@element-plus/icons-vue'
+import swal from 'sweetalert';
 //UserInfo
 import { userInfoService } from '@/api/user.js'
 import useUserInfoStore from '@/stores/userInfo.js'
+import { useTokenStore } from '@/stores/token.js'
 const userInfoStore = useUserInfoStore();
 const getUserInfo = async()=>{
     let result = await userInfoService();
@@ -35,10 +37,44 @@ const greetings = () => {
 }
 //Avatar
 import avatar from '@/assets/default.png'
+import { useRouter } from 'vue-router'
 const getAvatar = () => {
     return userInfoStore.info.userPic ? userInfoStore.info.userPic : avatar;
 }
-
+//DROPDOWN
+const router = useRouter();
+const tokenStore = useTokenStore();
+const handleCommand = (command)=>{
+    if(command==='information'){
+        router.push('/user/information')
+    }else if(command==='avatar'){
+        router.push('/user/avatar')
+    }else if(command==='resetPassword'){
+        router.push('/user/resetPassword')
+    }else if(command==='logout'){
+        swal({
+            title: "退出登录",
+            text: "退出之后，再次进入网页需要重新登录！",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((confirm) => {
+            if (confirm) {
+                swal("退出登录成功", {
+                    icon: "success",
+                });
+                tokenStore.removeToken();
+                userInfoStore.removeInfo();
+                router.push('/login')
+            } else {
+                swal("用户取消退出登录", {
+                icon: "info",
+                });
+            }
+        });
+    }
+}
 </script>
 
 <template>
@@ -93,7 +129,7 @@ const getAvatar = () => {
             <!-- 头部区域 -->
             <el-header>
                 <div>{{ greetings() }}<strong>{{ userInfoStore.info.nickname }}</strong></div>
-                <el-dropdown placement="bottom-end">
+                <el-dropdown placement="bottom-end" @command="handleCommand">
                     <span class="el-dropdown__box">
                         <el-image 
                             style="height: 50px;border-radius: 50%;"
@@ -105,9 +141,9 @@ const getAvatar = () => {
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="profile" :icon="Postcard">基本资料</el-dropdown-item>
+                            <el-dropdown-item command="information" :icon="Postcard">基本资料</el-dropdown-item>
                             <el-dropdown-item command="avatar" :icon="PictureRounded">更换头像</el-dropdown-item>
-                            <el-dropdown-item command="password" :icon="EditPen">重置密码</el-dropdown-item>
+                            <el-dropdown-item command="resetPassword" :icon="EditPen">重置密码</el-dropdown-item>
                             <el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
