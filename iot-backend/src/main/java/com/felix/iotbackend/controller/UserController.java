@@ -64,7 +64,7 @@ public class UserController {
         return Result.error("密码错误");
     }
 
-    @GetMapping("/userInfo")
+    @GetMapping("/information")
     public Result<User> userInfo(){
         Map<String,Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");

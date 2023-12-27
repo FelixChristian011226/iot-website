@@ -87,6 +87,8 @@ const register = async()=>{
         return
     }
     let result = await userRegisterService(registerData.value)
+    console.log(registerData.value)
+    console.log(result.code)
     if(result.code===0){
         // alert('注册成功')
         swal({
@@ -105,8 +107,10 @@ const register = async()=>{
     }
 }
 //LOGIN FUNCTION
+import {useTokenStore} from '@/stores/token.js'
 import {useRouter} from 'vue-router'
 const router = useRouter()
+const tokenStore = useTokenStore()
 const login = async()=>{
     if(!loginData.value.username||!loginData.value.password){
         return
@@ -118,6 +122,7 @@ const login = async()=>{
             icon: "success",
         }).then(()=>{
             //JUMP TO DASHBOARD
+            tokenStore.setToken(result.data)
             router.push('/home')
         });        
     }else{

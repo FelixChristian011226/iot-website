@@ -19,28 +19,15 @@ create table user (
                       update_time datetime not null comment '修改时间'
 ) comment '用户表';
 
--- 分类表
-create table category(
-                         id int unsigned primary key auto_increment comment 'ID',
-                         category_name varchar(32) not null comment '分类名称',
-                         category_alias varchar(32) not null comment '分类别名',
-                         create_user int unsigned not null comment '创建人ID',
-                         create_time datetime not null comment '创建时间',
-                         update_time datetime not null comment '修改时间',
-                         constraint fk_category_user foreign key (create_user) references user(id) -- 外键约束
-);
-
--- 文章表
-create table article(
+-- 设备表
+create table device(
                         id int unsigned primary key auto_increment comment 'ID',
-                        title varchar(30) not null comment '文章标题',
-                        content varchar(10000) not null comment '文章内容',
-                        cover_img varchar(128) not null  comment '文章封面',
-                        state varchar(3) default '草稿' comment '文章状态: 只能是[已发布] 或者 [草稿]',
-                        category_id int unsigned comment '文章分类ID',
+                        title varchar(32) not null comment '设备名称',
+                        category varchar(32) not null comment '设备类型',
+                        state varchar(3) default '未连接' comment '设备状态: 只能是[未连接]、[已连接]',
                         create_user int unsigned not null comment '创建人ID',
+                        location varchar(32) default '未定位' not null comment '设备位置',
                         create_time datetime not null comment '创建时间',
                         update_time datetime not null comment '修改时间',
-                        constraint fk_article_category foreign key (category_id) references category(id),-- 外键约束
-                        constraint fk_article_user foreign key (create_user) references user(id) -- 外键约束
+                        constraint fk_device_user foreign key (create_user) references user(id) -- 外键约束
 )

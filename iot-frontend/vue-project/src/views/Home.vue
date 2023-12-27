@@ -10,6 +10,29 @@ import {
     CaretBottom
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
+import { userInfoService } from '@/api/user.js';
+import useUserInfoStore from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+const getUserInfo = async()=>{
+    let result = await userInfoService();
+    userInfoStore.setInfo(result.data);
+}
+getUserInfo();
+const currentTime = new Date().getHours();
+
+let greeting = '';
+if (currentTime >= 6 && currentTime < 12) {
+    greeting = '上午好';
+} else if (currentTime >= 12 && currentTime < 14) {
+    greeting = '中午好';
+} else if (currentTime >= 14 && currentTime < 18) {
+    greeting = '下午好';
+} else {
+    greeting = '晚上好';
+}
+const greetings = () => {
+    return userInfoStore.info.nickname ? `${greeting}，` : `${greeting}`;
+}
 </script>
 
 <template>
@@ -38,7 +61,7 @@ import avatar from '@/assets/default.png'
                         </el-icon>
                         <span>个人中心</span>
                     </template>
-                    <el-menu-item index="/user/info">
+                    <el-menu-item index="/user/information">
                         <el-icon>
                             <Postcard />
                         </el-icon>
@@ -63,7 +86,7 @@ import avatar from '@/assets/default.png'
         <el-container>
             <!-- 头部区域 -->
             <el-header>
-                <div>黑马程序员：<strong>东哥</strong></div>
+                <div>{{ greetings() }}<strong>{{ userInfoStore.info.nickname }}</strong></div>
                 <el-dropdown placement="bottom-end">
                     <span class="el-dropdown__box">
                         <el-avatar :src="avatar" />

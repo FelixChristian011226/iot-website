@@ -9,11 +9,11 @@ import UserResetPasswordVue from '@/views/user/UserResetPassword.vue'
 
 const routes = [
     {path:'/login',component:LoginVue},
-    {path:'/home',component:HomeVue,redirect:'/user/info',children:[
+    {path:'/home',component:HomeVue,redirect:'/user/information',children:[
         {path:'/device/configuration',component:DeviceConfigurationVue},
         {path:'/device/statistics',component:DeviceStatisticsVue},
         {path:'/user/avatar',component:UserAvatarVue},
-        {path:'/user/info',component:UserInfoVue},
+        {path:'/user/information',component:UserInfoVue},
         {path:'/user/resetPassword',component:UserResetPasswordVue}
     ]}
 ]
