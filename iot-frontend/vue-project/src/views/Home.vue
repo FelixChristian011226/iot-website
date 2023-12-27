@@ -9,8 +9,8 @@ import {
     SwitchButton,
     CaretBottom
 } from '@element-plus/icons-vue'
-import avatar from '@/assets/default.png'
-import { userInfoService } from '@/api/user.js';
+//UserInfo
+import { userInfoService } from '@/api/user.js'
 import useUserInfoStore from '@/stores/userInfo.js'
 const userInfoStore = useUserInfoStore();
 const getUserInfo = async()=>{
@@ -19,7 +19,7 @@ const getUserInfo = async()=>{
 }
 getUserInfo();
 const currentTime = new Date().getHours();
-
+//Greetings
 let greeting = '';
 if (currentTime >= 6 && currentTime < 12) {
     greeting = '上午好';
@@ -33,6 +33,12 @@ if (currentTime >= 6 && currentTime < 12) {
 const greetings = () => {
     return userInfoStore.info.nickname ? `${greeting}，` : `${greeting}`;
 }
+//Avatar
+import avatar from '@/assets/default.png'
+const getAvatar = () => {
+    return userInfoStore.info.userPic ? userInfoStore.info.userPic : avatar;
+}
+
 </script>
 
 <template>
@@ -89,15 +95,18 @@ const greetings = () => {
                 <div>{{ greetings() }}<strong>{{ userInfoStore.info.nickname }}</strong></div>
                 <el-dropdown placement="bottom-end">
                     <span class="el-dropdown__box">
-                        <el-avatar :src="avatar" />
+                        <el-image 
+                            style="height: 50px;border-radius: 50%;"
+                            :src="getAvatar()">
+                        </el-image>
                         <el-icon>
                             <CaretBottom />
                         </el-icon>
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="profile" :icon="User">基本资料</el-dropdown-item>
-                            <el-dropdown-item command="avatar" :icon="Crop">更换头像</el-dropdown-item>
+                            <el-dropdown-item command="profile" :icon="Postcard">基本资料</el-dropdown-item>
+                            <el-dropdown-item command="avatar" :icon="PictureRounded">更换头像</el-dropdown-item>
                             <el-dropdown-item command="password" :icon="EditPen">重置密码</el-dropdown-item>
                             <el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
