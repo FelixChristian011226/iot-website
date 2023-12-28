@@ -4,6 +4,8 @@ import {ref} from 'vue'
 import avatar from '@/assets/default.png'
 import useUserInfoStore from '@/stores/userInfo.js'
 import { useTokenStore } from '@/stores/token.js'
+import { userAvarterUpdateService } from '@/api/user.js'
+import swal from 'sweetalert';
 
 const userInfoStore = useUserInfoStore()
 const tokenStore = useTokenStore()
@@ -13,6 +15,17 @@ const imgUrl= ref(userInfoStore.info.userPic?userInfoStore.info.userPic:avatar)
 
 const uploadSuccess=(result)=>{
     imgUrl.value = result.data;
+}
+
+const updateAvatar=async()=>{
+    let result = await userAvarterUpdateService(imgUrl.value);
+    swal({
+        title: "修改成功",
+        icon: "success",
+    }).then(()=>{
+        userInfoStore.setInfo({userPic:imgUrl.value});
+        window.location.reload();
+    });
 }
 </script>
 
@@ -42,7 +55,7 @@ const uploadSuccess=(result)=>{
                 <el-button type="primary" :icon="Plus" size="large"  @click="uploadRef.$el.querySelector('input').click()">
                     选择图片
                 </el-button>
-                <el-button type="success" :icon="Upload" size="large">
+                <el-button type="success" :icon="Upload" size="large" @click="updateAvatar">
                     上传头像
                 </el-button>
             </el-col>
