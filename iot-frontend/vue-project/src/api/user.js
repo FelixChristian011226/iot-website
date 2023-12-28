@@ -30,3 +30,10 @@ export const userAvarterUpdateService = (avatarUrl)=>{
     return request.patch('/user/updateAvatar',params);
 }
 
+export const userPasswordUpdateService = (passwordData)=>{
+    return request.patch('/user/updatePassword',{
+        old_password: passwordData.oldPassword,
+        new_password: passwordData.newPassword,
+        cfm_password: passwordData.cfmPassword
+    });
+}

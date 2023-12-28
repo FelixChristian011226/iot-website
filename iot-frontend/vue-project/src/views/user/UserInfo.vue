@@ -28,6 +28,7 @@ const updateUserInfo = async()=>{
             userInfoStore.setInfo(userInfo.value);
             window.location.reload();
     });
+    console.log(userInfo.value)
 }
 </script>
 <template>
