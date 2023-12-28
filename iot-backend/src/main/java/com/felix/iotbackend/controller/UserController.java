@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @PatchMapping("/updateAvatar")
-    public Result updateAvatar(@RequestParam @URL String avatarUrl){
+    public Result updateAvatar(@RequestParam String avatarUrl){
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
