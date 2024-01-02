@@ -24,6 +24,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) {
+        User u = userMapper.findByEmail(email);
+        return u;
+    }
+
+    @Override
     public void register(String username, String password) {
         //ENCRYPT PASSWORD
         String md5String = Md5Util.getMD5String(password);

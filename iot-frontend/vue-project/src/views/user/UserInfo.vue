@@ -21,14 +21,22 @@ const rules = {
 import { userInfoUpdateService } from '@/api/user.js'
 const updateUserInfo = async()=>{
     let result = await userInfoUpdateService(userInfo.value);
-    swal({
-            title: "修改成功",
-            icon: "success",
-        }).then(()=>{
-            userInfoStore.setInfo(userInfo.value);
-            window.location.reload();
-    });
-    console.log(userInfo.value)
+    if(result.code===0)
+    {
+        swal({
+                title: "修改成功",
+                icon: "success",
+            }).then(()=>{
+                userInfoStore.setInfo(userInfo.value);
+                window.location.reload();
+        });
+    }else{
+        swal({
+            title: "修改失败",
+            text: result.message,
+            icon: "error",
+        });
+    }
 }
 </script>
 <template>

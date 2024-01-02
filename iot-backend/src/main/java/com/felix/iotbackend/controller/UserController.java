@@ -74,6 +74,10 @@ public class UserController {
 
     @PutMapping("/update")
     public Result update(@RequestBody @Validated User u){
+        User u1 = userService.findByEmail(u.getEmail());
+        if(u1!=null && !u1.getId().equals(u.getId())){
+            return Result.error("邮箱已被其他用户绑定");
+        }
         userService.update(u);
         return Result.success();
     }

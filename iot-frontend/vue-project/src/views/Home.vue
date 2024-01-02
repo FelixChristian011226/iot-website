@@ -154,7 +154,7 @@ const handleCommand = (command)=>{
                 <router-view></router-view>
             </el-main>
             <!-- 底部区域 -->
-            <el-footer>大事件 ©2023 Created by 黑马程序员</el-footer>
+            <el-footer>IoT Platform ©2023 Created by Felix</el-footer>
         </el-container>
     </el-container>
 </template>
@@ -168,7 +168,7 @@ const handleCommand = (command)=>{
 
         &__logo {
             height: 120px;
-            background: url('@/assets/logo.png') no-repeat center / 120px auto;
+            background: url('@/assets/logo.png') no-repeat center / 200px auto;
         }
 
         .el-menu {
