@@ -21,6 +21,18 @@ public class DeviceController {
         return Result.success();
     }
 
+    @PutMapping
+    public Result update(@RequestBody Device device){
+        deviceService.update(device);
+        return Result.success();
+    }
+
+    @DeleteMapping
+    public Result delete(String deviceId){
+        deviceService.deleteByDeviceId(deviceId);
+        return Result.success();
+    }
+
     @GetMapping
     public Result<List<Device>> list(){
         List<Device> deviceList = deviceService.list();

@@ -22,6 +22,7 @@ create table user (
 -- 设备表
 create table device(
                         id int unsigned primary key auto_increment comment 'ID',
+                        device_id varchar(32) not null unique comment '设备ID',
                         title varchar(32) not null comment '设备名称',
                         category varchar(32) not null comment '设备类型',
                         state varchar(3) default '未连接' comment '设备状态: 只能是[未连接]、[已连接]',

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class Device {
     private Integer id;//主键ID
+    private String deviceId;//设备ID
     private String title;//设备名称
     private String category;//设备分类
     private String state;//设备状态 未连接|已连接

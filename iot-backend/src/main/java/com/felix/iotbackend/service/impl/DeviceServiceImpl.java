@@ -28,6 +28,17 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public void update(Device device) {
+        device.setUpdateTime(LocalDateTime.now());
+        deviceMapper.update(device);
+    }
+
+    @Override
+    public void deleteByDeviceId(String deviceId) {
+        deviceMapper.deleteByDeviceId(deviceId);
+    }
+
+    @Override
     public List<Device> list() {
         Map<String,Object> map = ThreadLocalUtil.get();
         Integer userId = (Integer) map.get("id");

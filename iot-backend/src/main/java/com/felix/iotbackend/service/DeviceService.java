@@ -7,6 +7,10 @@ import java.util.List;
 public interface DeviceService {
     void add(Device device);
 
+    void update(Device device);
+
+    void deleteByDeviceId(String deviceId);
+
     List<Device> list();
 
 }

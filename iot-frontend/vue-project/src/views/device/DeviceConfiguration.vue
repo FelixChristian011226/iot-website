@@ -7,7 +7,7 @@ import { ref } from 'vue'
 
 //DEVICE LIST
 const devices = ref();
-import { deviceListService,deviceAddService } from '@/api/device.js' 
+import { deviceListService,deviceAddService,deviceUpdateService,deviceDeleteService } from '@/api/device.js' 
 import swal from 'sweetalert';
 import { ElMessage } from 'element-plus';
 const deviceList = async()=>{
@@ -18,11 +18,21 @@ deviceList();
 
 //ADD DEVICE DIALOG
 const dialogVisible = ref(false)
+const title = ref('添加设备')
 const deviceModel = ref({
+    deviceId: '',
     title: '',
     category: ''
 })
 const rules = {
+    deviceId: [
+        { required: true, message: '请输入设备ID', trigger: 'blur' },
+        {
+            pattern: /^\S{2,10}$/,
+            message: '设备ID必须是2-10位的非空字符串',
+            trigger: 'blur'
+        }
+    ],
     title: [
         { required: true, message: '请输入设备名称', trigger: 'blur' },
     ],
@@ -41,7 +51,7 @@ const deviceTypes = [
 //ADD DEVICE CANCEL
 const cancel = () => {
     dialogVisible.value = false;
-    deviceModel.value = { title: '', category: '' };
+    deviceModel.value = { deviceId: '', title: '', category: '' };
 };
 
 //ADD DEVICE CONFIRM
@@ -51,6 +61,55 @@ const addDevice = async()=>{
     deviceList();
     cancel();
 }
+
+//MODIFY DEVICE DIALOG
+const disableIdInput = ref(false);
+const modify = (row)=>{
+    dialogVisible.value = true;
+    title.value = '修改设备';
+    disableIdInput.value = true;
+    deviceModel.value.deviceId = row.deviceId;
+    deviceModel.value.title = row.title;
+    deviceModel.value.category = row.category;
+}
+
+//MODIFY DEVICE CONFIRM
+const updateDevice = async()=>{
+    let result = await deviceUpdateService(deviceModel.value);
+    ElMessage.success("修改成功");
+    deviceList();
+    cancel();
+}
+
+//DELETE DEVICE
+const deleteDevice = async(row)=>{
+    swal({
+        title: "确定删除该设备吗？",
+        text: "删除后将无法恢复该设备！",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then(async(willDelete)=>{
+        if(willDelete){
+            console.log(row.deviceId);
+            let result = await deviceDeleteService(row.deviceId);
+            if(result.code===0){
+                swal({
+                    title: "删除成功",
+                    icon: "success",
+                }).then(()=>{
+                    deviceList();
+                });
+            }else{
+                swal({
+                    title: "删除失败",
+                    text: result.message,
+                    icon: "error",
+                });
+            }
+        }
+    });
+}
 </script>
 <template>
     <el-card class="page-container">
@@ -58,28 +117,32 @@ const addDevice = async()=>{
             <div class="header">
                 <span>设备配置</span>
                 <div class="extra">
-                    <el-button type="primary" @click="dialogVisible=true">添加设备</el-button>
+                    <el-button type="primary" @click="dialogVisible=true;title='添加设备';disableIdInput=false">添加设备</el-button>
                 </div>
             </div>
         </template>
         <el-table :data="devices" style="width: 100%">
             <el-table-column label="序号" width="100" type="index"> </el-table-column>
+            <el-table-column label="设备ID" prop="deviceId"></el-table-column>
             <el-table-column label="设备名称" prop="title"></el-table-column>
             <el-table-column label="设备类型" prop="category"></el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default="{ row }">
-                    <el-button :icon="Edit" circle plain type="primary" ></el-button>
-                    <el-button :icon="Delete" circle plain type="danger"></el-button>
+                    <el-button :icon="Edit" circle plain type="primary" @click="() => modify(row)"></el-button>
+                    <el-button :icon="Delete" circle plain type="danger" @click="() => deleteDevice(row)"></el-button>
                 </template>
             </el-table-column>
             <template #empty>
                 <el-empty description="没有数据" />
             </template>
         </el-table>
-        <el-dialog v-model="dialogVisible" title="添加设备" width="30%" :before-close="cancel">
+        <el-dialog v-model="dialogVisible" :title="title" width="30%" :before-close="cancel">
             <el-form :model="deviceModel" :rules="rules" label-width="100px" style="padding-right: 30px">
+                <el-form-item label="设备ID" prop="deviceId">
+                    <el-input v-model="deviceModel.deviceId" minlength="2" maxlength="10" :disabled="disableIdInput"></el-input>
+                </el-form-item>
                 <el-form-item label="设备名称" prop="title">
-                    <el-input v-model="deviceModel.title" minlength="1" maxlength="10"></el-input>
+                    <el-input v-model="deviceModel.title" minlength="2" maxlength="10"></el-input>
                 </el-form-item>
                 <el-form-item label="设备类型" prop="category">
                     <el-select v-model="deviceModel.category" placeholder="请选择设备类型">
@@ -90,7 +153,7 @@ const addDevice = async()=>{
             <template #footer>
                 <span class="dialog-footer">
                     <el-button @click="cancel">取消</el-button>
-                    <el-button type="primary" @click="addDevice"> 确认 </el-button>
+                    <el-button type="primary" @click="title=='添加设备'? addDevice() : updateDevice()"> 确认 </el-button>
                 </span>
             </template>
         </el-dialog>
@@ -101,6 +164,14 @@ const addDevice = async()=>{
 .page-container {
     min-height: 100%;
     box-sizing: border-box;
+
+    .el-input {
+        width: 200px;
+    }
+
+    .el-select {
+        width: 200px;
+    }
 
     .header {
         display: flex;
