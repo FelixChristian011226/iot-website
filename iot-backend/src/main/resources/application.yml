@@ -17,3 +17,10 @@ spring:
 mybatis:
     configuration:
         map-underscore-to-camel-case: true
+
+mqtt:
+    broker: tcp://localhost:1883
+    topic: testapp
+    username: admin
+    password: public
+    clientid: listener
