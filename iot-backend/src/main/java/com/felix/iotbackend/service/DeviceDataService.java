@@ -8,4 +8,8 @@ public interface DeviceDataService {
     void saveToDB(DeviceData deviceData);
 
     List<DeviceData> listByDeviceId(String deviceId);
+
+    Integer count();
+
+    List<DeviceData> listAll();
 }

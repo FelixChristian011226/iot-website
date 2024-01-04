@@ -25,4 +25,14 @@ public class DeviceDataServiceImpl implements DeviceDataService {
     public List<DeviceData> listByDeviceId(String deviceId) {
         return deviceDataMapper.listByDeviceId(deviceId);
     }
+
+    @Override
+    public Integer count() {
+        return deviceDataMapper.count();
+    }
+
+    @Override
+    public List<DeviceData> listAll() {
+        return deviceDataMapper.listAll();
+    }
 }

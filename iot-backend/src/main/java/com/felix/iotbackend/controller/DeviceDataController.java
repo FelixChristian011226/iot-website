@@ -22,4 +22,16 @@ public class DeviceDataController {
         List<DeviceData> deviceDataList = deviceDataService.listByDeviceId(deviceId);
         return Result.success(deviceDataList);
     }
+
+    @GetMapping("/count")
+    public Result<Integer> count(){
+        Integer count = deviceDataService.count();
+        return Result.success(count);
+    }
+
+    @GetMapping("/listall")
+    public Result<List<DeviceData>> listAll(){
+        List<DeviceData> deviceDataList = deviceDataService.listAll();
+        return Result.success(deviceDataList);
+    }
 }

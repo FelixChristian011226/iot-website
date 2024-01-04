@@ -6,10 +6,12 @@ import DeviceStatisticsVue from '@/views/device/DeviceStatistics.vue'
 import UserAvatarVue from '@/views/user/UserAvatar.vue'
 import UserInfoVue from '@/views/user/UserInfo.vue'
 import UserResetPasswordVue from '@/views/user/UserResetPassword.vue'
+import HomepageVue from '@/views/homepage/Homepage.vue'
 
 const routes = [
     {path:'/login',component:LoginVue},
-    {path:'/home',component:HomeVue,redirect:'/user/information',children:[
+    {path:'/home',component:HomeVue,redirect:'/homepage',children:[
+        {path:'/homepage',component:HomepageVue},
         {path:'/device/configuration',component:DeviceConfigurationVue},
         {path:'/device/statistics',component:DeviceStatisticsVue},
         {path:'/user/avatar',component:UserAvatarVue},

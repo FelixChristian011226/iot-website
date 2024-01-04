@@ -16,4 +16,10 @@ public interface DeviceDataMapper {
 
     @Select("select * from device_data where client_id=#{deviceId}")
     List<DeviceData> listByDeviceId(String deviceId);
+
+    @Select("select count(*) from device_data")
+    Integer count();
+
+    @Select("select * from device_data")
+    List<DeviceData> listAll();
 }
