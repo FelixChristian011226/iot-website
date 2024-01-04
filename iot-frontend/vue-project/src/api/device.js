@@ -15,3 +15,7 @@ export const deviceUpdateService = (deviceData)=>{
 export const deviceDeleteService = (deviceId)=>{
     return request.delete('/device?deviceId='+deviceId);
 }
+
+export const deviceUpdateConnectService = (deviceId,connect)=>{
+    return request.put('/device/connect?deviceId='+deviceId+'&connect='+connect);
+}

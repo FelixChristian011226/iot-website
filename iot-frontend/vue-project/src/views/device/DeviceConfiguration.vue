@@ -7,7 +7,7 @@ import { ref } from 'vue'
 
 //DEVICE LIST
 const devices = ref();
-import { deviceListService,deviceAddService,deviceUpdateService,deviceDeleteService } from '@/api/device.js' 
+import { deviceListService,deviceAddService,deviceUpdateService,deviceDeleteService,deviceUpdateConnectService } from '@/api/device.js' 
 import swal from 'sweetalert';
 import { ElMessage } from 'element-plus';
 const deviceList = async()=>{
@@ -110,6 +110,19 @@ const deleteDevice = async(row)=>{
         }
     });
 }
+
+//UPDATE DEVICE CONNECT
+const handleConnectChange = async (row) => {
+    let result = await deviceUpdateConnectService(row.deviceId, row.connect);
+    if (result.code === 0) {
+        ElMessage.success(row.connect ? "设备已连接" : "设备已断开连接");
+        deviceList();
+    } else {
+        ElMessage.error("连接状态更新失败");
+        row.connect = !row.connect;
+    }
+};
+
 </script>
 <template>
     <el-card class="page-container">
@@ -126,6 +139,15 @@ const deleteDevice = async(row)=>{
             <el-table-column label="设备ID" prop="deviceId"></el-table-column>
             <el-table-column label="设备名称" prop="title"></el-table-column>
             <el-table-column label="设备类型" prop="category"></el-table-column>
+            <el-table-column label="设备状态" prop="connect">
+                <template #default="{ row }">
+                    <el-switch v-model="row.connect" @change="handleConnectChange(row)" 
+                            :active-text="'已连接'" :inactive-text="'未连接'" 
+                            inline-prompt
+                            style="--el-switch-on-color: #13ce66">
+                    </el-switch>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default="{ row }">
                     <el-button :icon="Edit" circle plain type="primary" @click="() => modify(row)"></el-button>

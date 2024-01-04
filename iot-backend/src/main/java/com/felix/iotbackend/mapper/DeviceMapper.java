@@ -18,7 +18,9 @@ public interface DeviceMapper {
     @Delete("delete from device where device_id=#{deviceId}")
     void deleteByDeviceId(String deviceId);
 
+    @Update("update device set connect=#{connect} where device_id=#{deviceId}")
+    void conncect(String deviceId, boolean connect);
+
     @Select("select * from device where create_user=#{userId}")
     List<Device> list(Integer userId);
-
 }

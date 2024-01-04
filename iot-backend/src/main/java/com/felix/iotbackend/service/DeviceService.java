@@ -11,6 +11,7 @@ public interface DeviceService {
 
     void deleteByDeviceId(String deviceId);
 
-    List<Device> list();
+    void conncect(String deviceId, boolean connect);
 
+    List<Device> list();
 }

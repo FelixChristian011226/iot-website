@@ -39,6 +39,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public void conncect(String deviceId, boolean connect) {
+        deviceMapper.conncect(deviceId,connect);
+    }
+
+    @Override
     public List<Device> list() {
         Map<String,Object> map = ThreadLocalUtil.get();
         Integer userId = (Integer) map.get("id");

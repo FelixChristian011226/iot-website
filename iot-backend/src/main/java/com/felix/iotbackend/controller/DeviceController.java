@@ -33,6 +33,12 @@ public class DeviceController {
         return Result.success();
     }
 
+    @PutMapping("/connect")
+    public Result connect(String deviceId, boolean connect){
+        deviceService.conncect(deviceId,connect);
+        return Result.success();
+    }
+
     @GetMapping
     public Result<List<Device>> list(){
         List<Device> deviceList = deviceService.list();
