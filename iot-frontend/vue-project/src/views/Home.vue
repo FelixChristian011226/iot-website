@@ -3,6 +3,7 @@ import {
   HomeFilled,
   Monitor,
   PieChart,
+  Location,
   UserFilled,
   Postcard,
   PictureRounded,
@@ -106,6 +107,12 @@ const handleCommand = (command) => {
           </el-icon>
           <span>数据查询</span>
         </el-menu-item>
+        <el-menu-item index="/device/map">
+          <el-icon>
+            <Location />
+          </el-icon>
+          <span>设备地图</span>
+        </el-menu-item>
         <el-sub-menu>
           <template #title>
             <el-icon>
@@ -172,7 +179,15 @@ const handleCommand = (command) => {
         <router-view></router-view>
       </el-main>
       <!-- 底部区域 -->
-      <el-footer>IoT Platform ©2023 Created by Felix</el-footer>
+      <el-footer>
+        <a
+          href="https://github.com/FelixChristian011226/iot-website"
+          target="_blank"
+          class="footer-link"
+        >
+          IoT Platform ©2023 Created by Felix
+        </a>
+      </el-footer>
     </el-container>
   </el-container>
 </template>
@@ -222,6 +237,15 @@ const handleCommand = (command) => {
     justify-content: center;
     font-size: 14px;
     color: #666;
+  }
+  .footer-link {
+    color: #66a3ff; /* Light blue color */
+    text-decoration: none; /* Remove default underline */
+    transition: color 0.3s; /* Smooth color transition */
+
+    &:hover {
+      color: #004080; /* Darker blue color on hover */
+    }
   }
 }
 </style>

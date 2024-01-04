@@ -3,6 +3,7 @@ import LoginVue from '@/views/Login.vue'
 import HomeVue from '@/views/Home.vue'
 import DeviceConfigurationVue from '@/views/device/DeviceConfiguration.vue'
 import DeviceStatisticsVue from '@/views/device/DeviceStatistics.vue'
+import DeviceMapVue from '@/views/device/DeviceMap.vue'
 import UserAvatarVue from '@/views/user/UserAvatar.vue'
 import UserInfoVue from '@/views/user/UserInfo.vue'
 import UserResetPasswordVue from '@/views/user/UserResetPassword.vue'
@@ -14,6 +15,7 @@ const routes = [
         {path:'/homepage',component:HomepageVue},
         {path:'/device/configuration',component:DeviceConfigurationVue},
         {path:'/device/statistics',component:DeviceStatisticsVue},
+        {path:'/device/map',component:DeviceMapVue},
         {path:'/user/avatar',component:UserAvatarVue},
         {path:'/user/information',component:UserInfoVue},
         {path:'/user/resetPassword',component:UserResetPasswordVue}
