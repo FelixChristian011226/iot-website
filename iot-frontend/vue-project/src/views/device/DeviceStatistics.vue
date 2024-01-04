@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch, onUpdated, nextTick } from "vue";
 import { deviceDataListService } from "@/api/devicedata.js";
 import { deviceListService } from "@/api/device.js";
 import * as echarts from "echarts";
@@ -12,6 +12,7 @@ echarts.use([TooltipComponent, GridComponent, LineChart, CanvasRenderer]);
 const devicedata = ref([]);
 const myDevice = ref([]);
 const selectDevice = ref();
+const formattedDeviceData = ref("");
 const deviceList = async () => {
   let result = await deviceListService();
   myDevice.value = result.data.map((item) => item.deviceId);
@@ -33,7 +34,7 @@ onMounted(() => {
   fetchData(selectDevice.value);
   const lineChart = echarts.init(document.getElementById("chart-container"));
   const barChart = echarts.init(document.getElementById("bar-chart-container"));
-
+  outputTextarea.value = document.getElementById("outputid");
   let lineOptions = {
     title: {
       text: "Value",
@@ -77,7 +78,7 @@ onMounted(() => {
         data: chartData.value.map((item) => item.alert),
         type: "bar",
         itemStyle: {
-            color: 'red',
+          color: "red",
         },
       },
     ],
@@ -92,61 +93,80 @@ onMounted(() => {
   }, 1000);
 
   watch(chartData, () => {
-  lineOptions = {
-    title: {
-      text: "Value",
-      x: "center",
-    },
-    tooltip: {
-      trigger: "axis",
-    },
-    xAxis: {
-      type: "category",
-      data: chartData.value.map((item) => item.time),
-    },
-    yAxis: {
-      type: "value",
-    },
-    series: [
-      {
-        data: chartData.value.map((item) => item.value),
-        type: "line",
+    lineOptions = {
+      title: {
+        text: "Value",
+        x: "center",
       },
-    ],
-  };
-
-  barOptions = {
-    title: {
-      text: "Alert",
-      x: "center",
-    },
-    tooltip: {
-      trigger: "axis",
-    },
-    xAxis: {
-      type: "category",
-      data: chartData.value.map((item) => item.time),
-    },
-    yAxis: {
-      type: "value",
-    },
-    series: [
-      {
-        data: chartData.value.map((item) => item.alert),
-        type: "bar",
-        itemStyle: {
-            color: 'red',
+      tooltip: {
+        trigger: "axis",
+      },
+      xAxis: {
+        type: "category",
+        data: chartData.value.map((item) => item.time),
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          data: chartData.value.map((item) => item.value),
+          type: "line",
         },
-      },
-    ],
-  };
+      ],
+    };
 
-  lineChart.setOption(lineOptions);
-  barChart.setOption(barOptions);
+    barOptions = {
+      title: {
+        text: "Alert",
+        x: "center",
+      },
+      tooltip: {
+        trigger: "axis",
+      },
+      xAxis: {
+        type: "category",
+        data: chartData.value.map((item) => item.time),
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          data: chartData.value.map((item) => item.alert),
+          type: "bar",
+          itemStyle: {
+            color: "red",
+          },
+        },
+      ],
+    };
+
+    lineChart.setOption(lineOptions);
+    barChart.setOption(barOptions);
   });
 
   onUnmounted(() => {
     clearInterval(intervalId);
+  });
+});
+
+watch(devicedata, () => {
+  formatDeviceData();
+});
+
+const formatDeviceData = () => {
+  const formatted = devicedata.value.map((item) => JSON.stringify(item)).join("\n");
+  formattedDeviceData.value = formatted;
+};
+
+//AUTO SCROLL
+const outputTextarea = ref(null);
+watch(formattedDeviceData, () => {
+  nextTick(() => {
+    if (outputTextarea.value) {
+      outputTextarea.value.scrollTop = outputTextarea.value.scrollHeight;
+    }
   });
 });
 </script>
@@ -170,6 +190,15 @@ onMounted(() => {
       <div id="chart-container" class="chart" style="width: 50%; height: 300px"></div>
       <div id="bar-chart-container" class="chart" style="width: 50%; height: 300px"></div>
     </div>
+    <div class="output-container">
+      <textarea
+        ref="output"
+        id="outputid"
+        class="output-box"
+        v-model="formattedDeviceData"
+        readonly
+      ></textarea>
+    </div>
   </el-card>
 </template>
 
@@ -183,11 +212,22 @@ onMounted(() => {
   justify-content: space-between;
   margin-top: 20px;
 }
-
 .chart {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-right: 10px;
+}
+.output-box {
+  margin-top: 20px;
+  border-radius: 5px;
+  width: 100%;
+  height: 130px;
+  resize: none;
+  overflow-y: scroll;
+  background-color: #1d2021;
+  color: #fff;
+  font-size: 14px;
+  font-family: "Arial";
 }
 </style>
