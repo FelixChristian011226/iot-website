@@ -26,15 +26,21 @@ const fetchData = async (deviceId) => {
   chartData.value = result.data.map((item) => ({
     time: new Date(item.timestamp).toLocaleTimeString(),
     value: item.value,
+    alert: item.alert,
   }));
 };
 onMounted(() => {
   fetchData(selectDevice.value);
-  const chart = echarts.init(document.getElementById("chart-container"));
-  let options = {
+  const lineChart = echarts.init(document.getElementById("chart-container"));
+  const barChart = echarts.init(document.getElementById("bar-chart-container"));
+
+  let lineOptions = {
     title: {
       text: "Value",
       x: "center",
+    },
+    tooltip: {
+      trigger: "axis",
     },
     xAxis: {
       type: "category",
@@ -50,7 +56,35 @@ onMounted(() => {
       },
     ],
   };
-  chart.setOption(options);
+
+  let barOptions = {
+    title: {
+      text: "Alert",
+      x: "center",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    xAxis: {
+      type: "category",
+      data: chartData.value.map((item) => item.time),
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: chartData.value.map((item) => item.alert),
+        type: "bar",
+        itemStyle: {
+            color: 'red',
+        },
+      },
+    ],
+  };
+
+  lineChart.setOption(lineOptions);
+  barChart.setOption(barOptions);
 
   //REFRESH DATA
   const intervalId = setInterval(() => {
@@ -58,26 +92,57 @@ onMounted(() => {
   }, 1000);
 
   watch(chartData, () => {
-    options = {
-      title: {
-        text: "Value",
-        x: "center",
+  lineOptions = {
+    title: {
+      text: "Value",
+      x: "center",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    xAxis: {
+      type: "category",
+      data: chartData.value.map((item) => item.time),
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: chartData.value.map((item) => item.value),
+        type: "line",
       },
-      xAxis: {
-        type: "category",
-        data: chartData.value.map((item) => item.time),
-      },
-      yAxis: {
-        type: "value",
-      },
-      series: [
-        {
-          data: chartData.value.map((item) => item.value),
-          type: "line",
+    ],
+  };
+
+  barOptions = {
+    title: {
+      text: "Alert",
+      x: "center",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    xAxis: {
+      type: "category",
+      data: chartData.value.map((item) => item.time),
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: chartData.value.map((item) => item.alert),
+        type: "bar",
+        itemStyle: {
+            color: 'red',
         },
-      ],
-    };
-    chart.setOption(options);
+      },
+    ],
+  };
+
+  lineChart.setOption(lineOptions);
+  barChart.setOption(barOptions);
   });
 
   onUnmounted(() => {
@@ -101,7 +166,10 @@ onMounted(() => {
         </el-select>
       </div>
     </template>
-      <div id="chart-container" style="width: 50%; height: 300px"></div>
+    <div class="charts-container">
+      <div id="chart-container" class="chart" style="width: 50%; height: 300px"></div>
+      <div id="bar-chart-container" class="chart" style="width: 50%; height: 300px"></div>
+    </div>
   </el-card>
 </template>
 
@@ -110,5 +178,16 @@ onMounted(() => {
   margin-left: 30px;
   width: 150px;
 }
+.charts-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 
+.chart {
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
 </style>
