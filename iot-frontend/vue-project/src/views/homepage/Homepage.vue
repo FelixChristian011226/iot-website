@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { Connection, Link, MessageBox } from "@element-plus/icons-vue";
+import * as echarts from "echarts";
 import { deviceListService } from "@/api/device.js";
 import { deviceDataCountService, deviceDataListAllService } from "@/api/devicedata.js";
 const devices = ref([]);
@@ -25,7 +26,84 @@ const dataCount = async () => {
   totalData.value = result.data;
 };
 dataCount();
+onMounted(async () => {
+  await deviceList();
+  await dataList();
+  const formattedData = prepareChartData(datas.value);
+  const interval = setInterval(refreshData, 1000);
+
+  const myChart = echarts.init(chartContainer.value); // Get the reference correctly
+
+  const option = {
+    title: {
+      text: "设备数据折线图",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    legend: {
+      data: Object.keys(formattedData),
+    },
+    xAxis: {
+      type: "time",
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: Object.keys(formattedData).map((clientId) => ({
+      name: clientId,
+      type: "line",
+      data: formattedData[clientId],
+    })),
+  };
+
+  myChart.setOption(option);
+  // Remember to dispose the chart on unmount
+  onUnmounted(() => {
+    clearInterval(interval);
+    myChart.dispose();
+  });
+});
+
+// Function to prepare data for ECharts
+const prepareChartData = (data) => {
+  const chartData = {};
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    const { clientId, timestamp, value } = item;
+    if (!chartData[clientId]) {
+      chartData[clientId] = [];
+    }
+    chartData[clientId].push([timestamp, value]);
+  }
+  return chartData;
+};
+
+// Ref for the chart container
+const chartContainer = ref(null);
+
+const refreshData = async () => {
+  await dataList(); // 获取更新的数据
+  const formattedData = prepareChartData(datas.value);
+
+  const myChart = echarts.getInstanceByDom(chartContainer.value); // 获取现有的实例
+
+  if (myChart) {
+    // 更新现有实例的数据
+    myChart.setOption({
+      legend: {
+        data: Object.keys(formattedData),
+      },
+      series: Object.keys(formattedData).map((clientId) => ({
+        name: clientId,
+        type: "line",
+        data: formattedData[clientId],
+      })),
+    });
+  }
+};
 </script>
+
 <template>
   <el-card class="page-container">
     <template #header>
@@ -85,6 +163,9 @@ dataCount();
         </div>
       </el-card>
     </el-space>
+    <div>
+      <div ref="chartContainer" style="width: 100%; height: 400px"></div>
+    </div>
   </el-card>
 </template>
 
