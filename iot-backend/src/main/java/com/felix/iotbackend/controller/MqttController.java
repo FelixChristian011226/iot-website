@@ -3,6 +3,7 @@ package com.felix.iotbackend.controller;
 import com.felix.iotbackend.mqtt.MqttSubscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,11 +16,7 @@ public class MqttController {
     @Autowired
     public MqttController(MqttSubscriber mqttSubscriber) {
         this.mqttSubscriber = mqttSubscriber;
+        mqttSubscriber.subscribeToMqtt();
     }
 
-    @GetMapping("/subscribe")
-    public String startMqttSubscription() {
-        mqttSubscriber.subscribeToMqtt();
-        return "MQTT subscription started!";
-    }
 }

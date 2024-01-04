@@ -36,10 +36,13 @@ create table device(
 -- 数据表
 create table device_data(
                             id int unsigned primary key auto_increment comment 'ID',
-                            device_id varchar(32) not null comment '设备ID',
+                            alert boolean not null comment '告警',
+                            client_id varchar(32) not null comment '设备ID',
                             info varchar(256) not null comment '信息',
                             lat double not null comment '纬度',
                             lng double not null comment '经度',
                             create_time datetime not null comment '创建时间',
-                            constraint fk_device_data foreign key (device_id) references device(device_id) -- 外键约束
+                            timestamp bigint not null comment '时间戳',
+                            value int not null comment '值',
+                            constraint fk_device_data foreign key (client_id) references device(device_id) -- 外键约束
 ) comment '数据表';
