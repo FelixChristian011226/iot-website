@@ -23,4 +23,7 @@ public interface DeviceMapper {
 
     @Select("select * from device where create_user=#{userId}")
     List<Device> list(Integer userId);
+
+    @Select("select connect from device where device_id=#{deviceId}")
+    boolean checkConnect(String deviceId);
 }

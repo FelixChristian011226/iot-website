@@ -49,4 +49,9 @@ public class DeviceServiceImpl implements DeviceService {
         Integer userId = (Integer) map.get("id");
         return deviceMapper.list(userId);
     }
+
+    @Override
+    public boolean checkConnect(String deviceId) {
+        return deviceMapper.checkConnect(deviceId);
+    }
 }

@@ -1,6 +1,8 @@
 package com.felix.iotbackend.mqtt;
 
 import com.felix.iotbackend.pojo.DeviceData;
+import com.felix.iotbackend.service.DeviceDataService;
+import com.felix.iotbackend.service.DeviceService;
 import com.felix.iotbackend.service.impl.MqttMessageParseServiceImpl;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 public class MqttSubscriber {
 
     private final MqttMessageParseServiceImpl mqttMessageParseServiceImpl;
+    private final DeviceDataService deviceDataService;
+    private final DeviceService deviceService;
 
     private final String broker;
     private final String topic;
@@ -24,7 +28,9 @@ public class MqttSubscriber {
             @Value("${mqtt.username}") String username,
             @Value("${mqtt.password}") String password,
             @Value("${mqtt.clientid}") String clientId,
-            MqttMessageParseServiceImpl mqttMessageParseServiceImpl
+            MqttMessageParseServiceImpl mqttMessageParseServiceImpl,
+            DeviceDataService deviceDataService,
+            DeviceService deviceService
     ) {
         this.broker = broker;
         this.topic = topic;
@@ -32,6 +38,8 @@ public class MqttSubscriber {
         this.password = password;
         this.clientId = clientId;
         this.mqttMessageParseServiceImpl = mqttMessageParseServiceImpl;
+        this.deviceDataService = deviceDataService;
+        this.deviceService = deviceService;
     }
 
     public void subscribeToMqtt() {
@@ -53,7 +61,16 @@ public class MqttSubscriber {
 
                 public void messageArrived(String topic, MqttMessage message) {
                     DeviceData deviceData = mqttMessageParseServiceImpl.parseMqttMessage(message);
-                    System.out.println(deviceData);
+                    if(deviceService.checkConnect(deviceData.getClientId())) {
+                        try {
+                            deviceDataService.saveToDB(deviceData);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+//                    System.out.println(deviceData);
 //                    System.out.println("topic: " + topic);
 //                    System.out.println("Qos: " + message.getQos());
 //                    System.out.println("message content: " + new String(message.getPayload()));

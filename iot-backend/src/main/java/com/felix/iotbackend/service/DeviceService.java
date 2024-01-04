@@ -14,4 +14,6 @@ public interface DeviceService {
     void conncect(String deviceId, boolean connect);
 
     List<Device> list();
+
+    boolean checkConnect(String deviceId);
 }
