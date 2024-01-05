@@ -29,8 +29,9 @@ const fetchData = async (deviceId) => {
   }));
 };
 
+//MARKER UPDATE
 let map = null;
-const markers = {};
+let markers = {};
 const updateMarkers = () => {
   // 遍历新的数据并更新已有标记或添加新的标记
   mapPushpinData.value.forEach((point) => {
@@ -46,6 +47,7 @@ const updateMarkers = () => {
         position: [point.lng, point.lat],
         title: point.info,
         icon: point.alert ? "/PinRed.png" : "/PinGreen.png",
+        offset: new AMap.Pixel(-16, -45),
       });
 
       marker.setMap(map);
@@ -55,6 +57,30 @@ const updateMarkers = () => {
     }
   });
 };
+//TRAJECTORY UPDATE
+const showTrajectory = ref(false);
+let polyline = null;
+const updateTrajectory = () => {
+  const trajectoryPoints = mapPushpinData.value
+    .filter((point) => point.lat && point.lng) // 过滤掉无效的坐标点
+    .map((point) => [point.lng, point.lat]); // 创建 [lng, lat] 形式的坐标点数组
+
+  if (polyline) {
+    polyline.setMap(null); // 清除地图上已有的轨迹线
+  }
+
+  if (showTrajectory.value && trajectoryPoints.length > 1) {
+    // 如果复选框被选中并且有超过一个有效坐标点，连接这些坐标点绘制折线
+    polyline = new AMap.Polyline({
+      path: trajectoryPoints,
+      borderWeight: 3,
+      strokeColor: "#3366FF",
+      lineJoin: "round",
+    });
+    polyline.setMap(map);
+  }
+};
+
 onMounted(() => {
   fetchData(selectDevice.value);
   AMapLoader.load({
@@ -85,6 +111,7 @@ onMounted(() => {
           position: [point.lng, point.lat], // 先经度，然后纬度
           title: point.info, // 标记标题/信息
           icon: point.alert ? "/PinRed.png" : "/PinGreen.png", // 根据警报状态自定义图标
+          offset: new AMap.Pixel(-16, -45),
         });
 
         // 将标记添加到地图上
@@ -117,6 +144,10 @@ watch(selectDevice, async (newDeviceId) => {
 
   // Fetch data for the newly selected device
   await fetchData(newDeviceId);
+  showTrajectory.value = false;
+});
+watch(showTrajectory, () => {
+  updateTrajectory();
 });
 </script>
 
@@ -133,6 +164,9 @@ watch(selectDevice, async (newDeviceId) => {
             :value="device"
           ></el-option>
         </el-select>
+        <el-checkbox v-model="showTrajectory" class="trajectory-checkbox">
+          <span class="custom-label">显示历史轨迹</span>
+        </el-checkbox>
       </div>
     </template>
 
@@ -148,5 +182,20 @@ watch(selectDevice, async (newDeviceId) => {
 .custom-select {
   margin-left: 30px;
   width: 150px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.trajectory-checkbox {
+  margin-left: 30px;
+  display: flex;
+  justify-content: flex-end; /* 将内容右对齐 */
+}
+.trajectory-checkbox .custom-label {
+  font-size: 16px !important; /* Increase font size */
+  margin-right: 20px; /* Right margin */
+  margin-top: 5px; /* Adjust vertical alignment */
 }
 </style>
