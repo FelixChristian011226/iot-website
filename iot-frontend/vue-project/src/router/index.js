@@ -10,6 +10,7 @@ import UserResetPasswordVue from '@/views/user/UserResetPassword.vue'
 import HomepageVue from '@/views/homepage/Homepage.vue'
 
 const routes = [
+    {path:'/',redirect:'/login'},
     {path:'/login',component:LoginVue},
     {path:'/home',component:HomeVue,redirect:'/homepage',children:[
         {path:'/homepage',component:HomepageVue},
