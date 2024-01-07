@@ -1,4 +1,4 @@
-**其他语言版本: [English](README.md), [中文](README_zh.md).**
+**[English](Readme.md)|[中文](Readme_zh.md)**
 
 # 物联网平台 By Felix
 
