@@ -1,3 +1,5 @@
+**其他语言版本: [English](README.md), [中文](README_zh.md).**
+
 # 物联网平台 By Felix
 
 这是浙江大学 B/S 软件设计课程的项目。框架如下：
