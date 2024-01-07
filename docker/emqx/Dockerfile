@@ -1,0 +1,9 @@
+FROM emqx:latest
+
+EXPOSE 1883
+EXPOSE 8083
+EXPOSE 8883
+EXPOSE 8084
+EXPOSE 18083
+
+CMD ["emqx", "foreground"]

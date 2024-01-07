@@ -1,0 +1,131 @@
+version: '3'
+services:
+  # 数据库
+  mysql:
+    image: mysql:v1.0.0
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    # volumes:
+    #   # mysql的数据文件
+    #   - /home/docker/mysql/data:/var/lib/mysql
+    #   # mysql的配置文件
+    #   - /home/docker/mysql/config:/etc/mysql/conf.d
+    environment:
+      TZ: Asia/Shanghai
+      # root用户密码
+      MYSQL_ROOT_PASSWORD: "011226"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p011226"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks: 
+      - iot
+
+  # 缓存
+  redis:
+    image: redis:v1.0.0
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      # redis的数据文件
+      - /home/docker/redis/data:/data
+      # redis的配置文件
+      - /home/docker/redis/config:/usr/local/etc/redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks: 
+      - iot
+
+  # emqx
+  emqx:
+    image: emqx:v1.0.0
+    container_name: emqx
+    restart: always
+    privileged: true
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "8883:8883"
+      - "8084:8084"
+      - "18083:18083"
+    depends_on:
+      - redis
+      - mysql
+    # volumes:
+    #   # emqx的数据文件
+    #   - /home/docker/emqx/data:/opt/emqx/data
+    #   # emqx的配置文件
+    #   - /home/docker/emqx/config:/opt/emqx/etc
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    networks: 
+      - iot
+
+  # iotclient
+  iotclient:
+    build:
+      context: ./iotclient
+    container_name: iotclient
+    image: iotclient:v1.0.0
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+      - mysql
+      - emqx
+    networks: 
+      - iot    
+
+  # 后台服务
+  backend:
+    build:
+      context: ./backend
+    environment:
+      MYSQL_SERVER: mysql:3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: "011226"
+      JAVA_OPTS: "-server -XX:+UseG1GC -Xmx2g -XX:MaxGCPauseMillis=200 -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=logs/java_heapdump.hprof -XX:-UseLargePages -Xloggc:logs/gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
+    container_name: backend
+    image: springboot:v1.0.0
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+      - emqx
+    networks:
+      - iot
+
+  # 前端UI
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    container_name: frontend
+    image: vue:v1.0.0
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+      - redis
+      - emqx
+      - backend
+    networks: 
+      - iot
+
+networks:
+  iot:
+    driver: bridge
