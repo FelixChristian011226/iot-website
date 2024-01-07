@@ -1,4 +1,4 @@
-**[English](Readme.md)|[中文](Readme_zh.md)**
+**[English](Readme.md) | 中文**
 
 # 物联网平台 By Felix
 

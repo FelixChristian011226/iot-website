@@ -1,4 +1,4 @@
-**[English](Readme.md)|[中文](Readme_zh.md)**
+**English | [中文](Readme_zh.md)**
 
 # IoT Platform By Felix
 
