@@ -14,7 +14,8 @@ Framework:
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [Presentation](#presentation)
+- [Contributors](#contributors)
 - [License](#license)
 
 ## Installation
@@ -61,51 +62,58 @@ Framework:
 
 #### Package run
 
-	1. git clone this repository.
+1. git clone this repository.
 
-	2. start `mysql` service.
+2. start `mysql` service.
 
-	3. unzip the `emqx` `nginx` and `redis` zip file in `iot-tools`.
+3. unzip the `emqx` `nginx` and `redis` zip file in `iot-tools`.
 
-	4. enter `emqx` folder, run in terminal:
+4. enter `emqx` folder, run in terminal:
 
-    ```bash
-    .\bin\emqx start
-    ```
+```bash
+.\bin\emqx start
+```
 
-	5. enter `redis` folder, run `redis-server.exe`.
+5. enter `redis` folder, run `redis-server.exe`.
 
-	6. enter `iotclient` folder, change `server` in `iot.properties` if necessary, then run:
+6. enter `iotclient` folder, change `server` in `iot.properties` if necessary, then run:
 
-    ```bash
-    java -jar iotclient.jar
-    ```
+```bash
+java -jar iotclient.jar
+```
 
-	7. start backend:
+7. start backend:
 
-    ```bash
-    java -jar .\docker\backend\iot-backend-0.0.1-SNAPSHOT.jar
-    ```
+```bash
+java -jar .\docker\backend\iot-backend-0.0.1-SNAPSHOT.jar
+```
 
-	8. run command:
+8. run command:
 
-    ```bash
-    cp .\docker\frontend\dist\* .\iot-tools\nginx-1.24.0\html\
-    start .\iot-tools\nginx-1.24.0\nginx.exe
-    ```
+```bash
+cp .\docker\frontend\dist\* .\iot-tools\nginx-1.24.0\html\
+start .\iot-tools\nginx-1.24.0\nginx.exe
+```
 
-	9.  Open browser, enter the following address:
+9.  Open browser, enter the following address:
 
-    ```
-    localhost:80
-    ```
+```
+localhost:80
+```
 
-    
+
+​    
 
 ### Docker
 
 	1. Download [docker](https://github.com/FelixChristian011226/iot-website/tree/main/docker) folder.
 	1. See [docker employment instructions](https://github.com/FelixChristian011226/iot-website/blob/main/docker/Docker%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E.md) for more help.
+
+
+
+## Usage
+
+​	As told in installation part.
 
 
 
@@ -143,3 +151,10 @@ Framework:
 
 ![passwordupdatepage](https://github.com/FelixChristian011226/iot-website/blob/main/report/images/updatepassword.png?raw=true)
 
+## Contributors
+
+- [FelixChristian](https://github.com/FelixChristian011226)
+
+## License
+
+[IoT Platform ©2023 Created by Felix](https://github.com/FelixChristian011226/iot-website)
