@@ -56,9 +56,9 @@ Framework:
 
  9.  Open browser, enter the following address:
 
-    ```
-    localhost:5173
-    ```
+```
+localhost:5173
+```
     
     
 
