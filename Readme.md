@@ -72,44 +72,44 @@ Framework:
 
 4. enter `emqx` folder, run in terminal:
 
-```bash
-.\bin\emqx start
-```
+    ```bash
+    .\bin\emqx start
+    ```
 
 5. enter `redis` folder, run `redis-server.exe`.
 
 6. enter `iotclient` folder, change `server` in `iot.properties` if necessary, then run:
 
-```bash
-java -jar iotclient.jar
-```
+    ```bash
+    java -jar iotclient.jar
+    ```
 
 7. start backend:
 
-```bash
-java -jar .\docker\backend\iot-backend-0.0.1-SNAPSHOT.jar
-```
+    ```bash
+    java -jar .\docker\backend\iot-backend-0.0.1-SNAPSHOT.jar
+    ```
 
 8. run command:
 
-```bash
-cp .\docker\frontend\dist\* .\iot-tools\nginx-1.24.0\html\
-start .\iot-tools\nginx-1.24.0\nginx.exe
-```
+    ```bash
+    cp .\docker\frontend\dist\* .\iot-tools\nginx-1.24.0\html\
+    start .\iot-tools\nginx-1.24.0\nginx.exe
+    ```
 
 9.  Open browser, enter the following address:
 
-```
-localhost:80
-```
+    ```
+    localhost:80
+    ```
 
 
 ​    
 
 #### Docker
 
-	1. Download [docker](https://github.com/FelixChristian011226/iot-website/tree/main/docker) folder.
-	2. See [docker employment instructions](https://github.com/FelixChristian011226/iot-website/blob/main/docker/Docker%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E.md) for more help.
+1. Download [docker](https://github.com/FelixChristian011226/iot-website/tree/main/docker) folder.
+2. See [docker employment instructions](https://github.com/FelixChristian011226/iot-website/blob/main/docker/Docker%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E.md) for more help.
 
 
 
