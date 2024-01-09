@@ -54,7 +54,7 @@ Framework:
     npm run dev
     ```
 
- 9.  Open browser, enter the following address:
+ 9. open browser, enter the following address:
 
     ```
     localhost:5173
