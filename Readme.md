@@ -28,7 +28,7 @@ Framework:
 
  1. git clone this repository.
 
- 2. start `mysql` service.
+ 2. start `mysql` service. init table using file '.\iot-database\CreateTable.sql'.
 
  3. unzip the `emqx` and `redis` zip file in `iot-tools`.
 
