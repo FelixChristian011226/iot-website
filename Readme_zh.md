@@ -24,7 +24,7 @@
 #### 直接运行（推荐）
 
 1. 克隆该repository。
-2. 启动 `mysql` 服务。
+2. 启动 `mysql` 服务。执行`.\iot-database\CreateTable.sql`以初始化图表。
 3. 在 `iot-tools` 文件夹中解压缩 `emqx` 和 `redis` 压缩文件。
 4. 进入 `emqx` 文件夹，在终端中运行：
 
